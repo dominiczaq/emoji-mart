@@ -101,6 +101,20 @@ flags.emojis = flags.emojis.filter((flag) => {
   return true
 }).sort()
 
+Object.keys(data.emojis).forEach(emojiName => {
+  // const emoji = data.emojis[emojiName];
+  // if (emoji.has_img_twitter === false) {
+  //   console.log(emoji.name);
+  // }
+  delete emoji.has_img_apple;
+  delete emoji.has_img_google;
+  delete emoji.has_img_emojione;
+  delete emoji.has_img_facebook;
+  delete emoji.has_img_messenger;
+  delete emoji.skin_variations;
+})
+
+
 const stringified = JSON.stringify(data).replace(/\"([A-Za-z_]+)\":/g, '$1:')
 fs.writeFile('src/data/data.js', `export default ${stringified}`, (err) => {
   if (err) throw err
