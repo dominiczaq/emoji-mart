@@ -102,10 +102,7 @@ flags.emojis = flags.emojis.filter((flag) => {
 }).sort()
 
 Object.keys(data.emojis).forEach(emojiName => {
-  // const emoji = data.emojis[emojiName];
-  // if (emoji.has_img_twitter === false) {
-  //   console.log(emoji.name);
-  // }
+  const emoji = data.emojis[emojiName];
   delete emoji.has_img_apple;
   delete emoji.has_img_google;
   delete emoji.has_img_emojione;
