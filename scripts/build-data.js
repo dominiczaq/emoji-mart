@@ -101,6 +101,8 @@ flags.emojis = flags.emojis.filter((flag) => {
   return true
 }).sort()
 
+const emojisToRemove = [];
+
 Object.keys(data.emojis).forEach(emojiName => {
   const emoji = data.emojis[emojiName];
   delete emoji.has_img_apple;
@@ -109,7 +111,25 @@ Object.keys(data.emojis).forEach(emojiName => {
   delete emoji.has_img_facebook;
   delete emoji.has_img_messenger;
   delete emoji.skin_variations;
-})
+
+  if (!emoji.has_img_twitter) {
+    emojisToRemove.push(emojiName);
+  }
+  delete emoji.has_img_twitter;
+});
+
+emojisToRemove.forEach(toRemove => {
+  delete data.emojis[toRemove];
+
+  data.categories.forEach(category => {
+    var position = category.emojis.findIndex(e => e === toRemove);
+    if (position > 0) {
+      category.emojis.splice(position, 1)
+    }
+  })
+});
+
+data.skins = {};
 
 
 const stringified = JSON.stringify(data).replace(/\"([A-Za-z_]+)\":/g, '$1:')

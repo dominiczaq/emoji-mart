@@ -119,7 +119,7 @@ const Emoji = props => {
       backgroundSize: 'contain',
     }
   } else {
-    let setHasEmoji = _getData(props)[`has_img_${props.set}`]
+    let setHasEmoji = true;
 
     if (!setHasEmoji) {
       if (props.fallback) {
