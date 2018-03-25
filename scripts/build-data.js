@@ -10,12 +10,12 @@ var data = { categories: [], emojis: {}, skins: {}, short_names: {} },
 var categories = [
   ['Smileys & People', 'people'],
   ['Animals & Nature', 'nature'],
-  ['Food & Drink', 'foods'],
+  // ['Food & Drink', 'foods'],
   ['Activities', 'activity'],
-  ['Travel & Places', 'places'],
-  ['Objects', 'objects'],
-  ['Symbols', 'symbols'],
-  ['Flags', 'flags'],
+  // ['Travel & Places', 'places'],
+  // ['Objects', 'objects'],
+  // ['Symbols', 'symbols'],
+  // ['Flags', 'flags'],
 ]
 
 categories.forEach((category, i) => {
@@ -59,8 +59,10 @@ emojiData.forEach((datum) => {
     data.skins[datum.short_name] = datum
   } else {
     categoryIndex = categoriesIndex[category]
-    data.categories[categoryIndex].emojis.push(datum.short_name)
-    data.emojis[datum.short_name] = datum
+    if (data.categories[categoryIndex]) {
+      data.categories[categoryIndex].emojis.push(datum.short_name)
+      data.emojis[datum.short_name] = datum
+    }
   }
 
   datum.short_names.forEach((short_name, i) => {
@@ -94,12 +96,12 @@ emojiData.forEach((datum) => {
   }
 })
 
-var flags = data.categories[categoriesIndex['Flags']]
-flags.emojis = flags.emojis.filter((flag) => {
-  // Until browsers support Flag UN
-  if (flag == 'flag-un') return
-  return true
-}).sort()
+// var flags = data.categories[categoriesIndex['Flags']]
+// flags.emojis = flags.emojis.filter((flag) => {
+//   // Until browsers support Flag UN
+//   if (flag == 'flag-un') return
+//   return true
+// }).sort()
 
 const emojisToRemove = [];
 
