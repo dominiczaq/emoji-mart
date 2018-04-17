@@ -135,6 +135,20 @@ export default class Picker extends React.PureComponent {
       this.categories[0].first = true
     }
 
+    // Workaround for FF - requestAnimationFrame callback fails silently when window is not current context
+    this.currentWindow = window;
+    if (props.windowContext !== null && window.requestAnimationFrame) {
+      var hasWrongWindowContext = true;
+      window.requestAnimationFrame(() => {
+        hasWrongWindowContext = false;
+      });
+      setTimeout(() => {
+        if (hasWrongWindowContext) {
+          this.currentWindow = props.windowContext;
+        }
+      }, 100);
+    }
+
     this.categories.unshift(this.SEARCH_CATEGORY)
 
     this.setAnchorsRef = this.setAnchorsRef.bind(this)
@@ -231,8 +245,7 @@ export default class Picker extends React.PureComponent {
     if (component) {
       let maxMargin = component.maxMargin
       component.forceUpdate()
-
-      window.requestAnimationFrame(() => {
+      this.currentWindow.requestAnimationFrame(() => {
         if (!this.scroll) return
         component.memoizeSize()
         if (maxMargin == component.maxMargin) return
@@ -250,7 +263,7 @@ export default class Picker extends React.PureComponent {
   handleScroll() {
     if (!this.waitingForPaint) {
       this.waitingForPaint = true
-      window.requestAnimationFrame(this.handleScrollPaint)
+      this.currentWindow.requestAnimationFrame(this.handleScrollPaint)
     }
   }
 
@@ -352,7 +365,7 @@ export default class Picker extends React.PureComponent {
       this.handleSearch(null)
       this.search.clear()
 
-      window.requestAnimationFrame(scrollToComponent)
+      this.currentWindow.requestAnimationFrame(scrollToComponent)
     } else {
       scrollToComponent()
     }
@@ -551,6 +564,7 @@ Picker.propTypes = {
   exclude: PropTypes.arrayOf(PropTypes.string),
   recent: PropTypes.arrayOf(PropTypes.string),
   autoFocus: PropTypes.bool,
+  windowContext: PropTypes.object,
   custom: PropTypes.arrayOf(
     PropTypes.shape({
       name: PropTypes.string.isRequired,
@@ -583,5 +597,6 @@ Picker.defaultProps = {
   showSkinTones: true,
   emojiTooltip: Emoji.defaultProps.tooltip,
   autoFocus: false,
+  windowContext: null,
   custom: [],
 }
